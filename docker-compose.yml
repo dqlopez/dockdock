@@ -1,0 +1,23 @@
+version: "3"
+
+networks:
+  backend:
+    ipam:
+      driver: ${NETWORKS_DRIVER}
+      config:
+        - subnet: ${IPV4_SUBNET_MASK}
+        - subnet: ${IPV6_SUBNET_MASK}
+
+services:
+  nginx:
+    build:
+      context: ./services/nginx
+    ports:
+      - "${HOST_NGINX_HTTP_PORT}:${NGINX_EXPOSE_HTTP_PORT}"
+    volumes:
+      - ${HOST_APP_DIR}:${NGINX_WEB_ROOT}
+      - ${NGINX_SITES_PATH}:${NGINX_SITES_AVAILABLE_PATH}
+    networks:
+      backend:
+        ipv4_address: ${IPV4_STATIC_IP}
+        ipv6_address: ${IPV6_STATIC_IP}
